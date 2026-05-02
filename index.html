@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saiyan IQ by Ayaan — Dragon Ball Legends Quiz App</title>
+<meta name="description" content="The ultimate Dragon Ball Legends quiz app. Test your knowledge with 108+ questions across 7 categories!">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080808;
+  --card: rgba(18,10,0,0.95);
+  --border: #2a1500;
+  --orange: #ff6a00;
+  --orange2: #ff9a00;
+  --yellow: #ffd000;
+  --red: #ff2d00;
+  --text: #fff5e6;
+  --muted: #8a6a4a;
+  --black: #000000;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; scroll-behavior:smooth; }
+
+body {
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* ── CUSTOM CURSOR ── */
+*, *::before, *::after { cursor: none !important; }
+.cursor {
+  width:12px; height:12px;
+  background:var(--orange);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9999;
+  transition:transform 0.15s, background 0.2s;
+  box-shadow:0 0 15px var(--orange);
+  mix-blend-mode:screen;
+}
+.cursor-ring {
+  width:36px; height:36px;
+  border:2px solid rgba(255,106,0,0.4);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  z-index:9998;
+  transition:all 0.12s ease-out;
+}
+
+/* ── BACKGROUND ── */
+.bg-fixed {
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(255,106,0,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(255,60,0,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(20,8,0,1) 0%, #080808 100%);
+  overflow:hidden;
+}
+
+/* Fire particles */
+.fire-particle {
+  position:absolute;
+  border-radius:50% 50% 30% 30%;
+  animation:fireRise linear infinite;
+  pointer-events:none;
+}
+@keyframes fireRise {
+  0%{transform:translateY(0) scaleX(1);opacity:.8}
+  50%{transform:translateY(-40vh) scaleX(0.7);opacity:.4}
+  100%{transform:translateY(-80vh) scaleX(0.3);opacity:0}
+}
+
+/* Hex grid pattern */
+.hex-grid {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,106,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,106,0,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+  animation:gridShift 30s linear infinite;
+}
+@keyframes gridShift {
+  0%{background-position:0 0}
+  100%{background-position:60px 60px}
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(8,4,0,0.9);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  padding:0 5%;
+  display:flex; align-items:center; justify-content:space-between;
+  height:70px;
+}
+
+.nav-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem; letter-spacing:4px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+.nav-links { display:flex; gap:32px; align-items:center; }
+.nav-link {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.9rem; letter-spacing:2px; color:var(--muted);
+  text-decoration:none; transition:color .2s;
+}
+.nav-link:hover { color:var(--orange); }
+
+.nav-cta {
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000; border:none; border-radius:8px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.9rem; letter-spacing:2px;
+  padding:10px 22px; cursor:none;
+  transition:all .2s;
+  box-shadow:0 4px 20px rgba(255,106,0,0.3);
+}
+.nav-cta:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(255,106,0,0.5); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+  padding:100px 5% 60px;
+  position:relative; z-index:10;
+}
+
+.hero-inner { max-width:800px; }
+
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,106,0,0.1);
+  border:1px solid rgba(255,106,0,0.3);
+  border-radius:99px; padding:8px 20px;
+  font-size:.8rem; font-weight:700; letter-spacing:2px;
+  color:var(--orange); margin-bottom:28px;
+  animation:badgePulse 2s ease-in-out infinite alternate;
+}
+@keyframes badgePulse {
+  0%{box-shadow:0 0 0 rgba(255,106,0,0)}
+  100%{box-shadow:0 0 20px rgba(255,106,0,0.3)}
+}
+
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,12vw,9rem);
+  letter-spacing:6px; line-height:.85;
+  margin-bottom:8px;
+}
+
+.hero-title .line1 {
+  display:block;
+  background:linear-gradient(135deg,#fff 0%,var(--orange2) 40%,var(--orange) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(255,106,0,0.4));
+  animation:titleGlow 3s ease-in-out infinite alternate;
+}
+@keyframes titleGlow {
+  0%{filter:drop-shadow(0 0 20px rgba(255,106,0,0.3))}
+  100%{filter:drop-shadow(0 0 60px rgba(255,106,0,0.8))}
+}
+
+.hero-title .line2 {
+  display:block; font-size:clamp(1.5rem,4vw,3rem);
+  color:var(--muted); letter-spacing:8px; margin-top:4px;
+}
+
+.hero-title .by {
+  font-size:clamp(1rem,2.5vw,1.8rem);
+  color:var(--orange); letter-spacing:6px;
+}
+
+.hero-desc {
+  font-size:1.1rem; color:var(--muted);
+  max-width:500px; margin:24px auto 36px;
+  line-height:1.6; font-weight:500;
+}
+
+.hero-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+.btn-hero-primary {
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000; border:none; border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem; letter-spacing:3px;
+  padding:18px 40px; cursor:none;
+  transition:all .2s;
+  box-shadow:0 4px 30px rgba(255,106,0,0.4);
+  position:relative; overflow:hidden;
+}
+.btn-hero-primary::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);
+  opacity:0; transition:opacity .2s;
+}
+.btn-hero-primary:hover::before { opacity:1; }
+.btn-hero-primary:hover { transform:translateY(-3px); box-shadow:0 10px 40px rgba(255,106,0,0.6); }
+
+.btn-hero-secondary {
+  background:transparent;
+  color:var(--orange); border:2px solid var(--orange);
+  border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem; letter-spacing:3px;
+  padding:16px 40px; cursor:none;
+  transition:all .2s;
+}
+.btn-hero-secondary:hover { background:rgba(255,106,0,0.1); transform:translateY(-3px); }
+
+/* Dragon balls row */
+.dragon-balls {
+  display:flex; justify-content:center; gap:10px; margin-top:48px;
+}
+.db {
+  width:22px; height:22px; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#ffd700,#ff8c00 60%,#c85a00);
+  box-shadow:0 0 12px rgba(255,160,0,0.7);
+  animation:dbBounce 2s ease-in-out infinite;
+}
+.db:nth-child(2){animation-delay:.15s}.db:nth-child(3){animation-delay:.3s}
+.db:nth-child(4){animation-delay:.45s}.db:nth-child(5){animation-delay:.6s}
+.db:nth-child(6){animation-delay:.75s}.db:nth-child(7){animation-delay:.9s}
+@keyframes dbBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px);box-shadow:0 10px 24px rgba(255,160,0,0.9)}}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  position:relative; z-index:10;
+  background:rgba(255,106,0,0.06);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:28px 5%;
+}
+.stats-inner {
+  max-width:900px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:20px; text-align:center;
+}
+.stat-item {}
+.stat-num {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.8rem; letter-spacing:2px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:1;
+}
+.stat-label {
+  font-size:.78rem; color:var(--muted);
+  font-weight:700; letter-spacing:2px;
+  margin-top:4px; text-transform:uppercase;
+}
+
+/* ── SECTIONS ── */
+section {
+  position:relative; z-index:10;
+  padding:80px 5%;
+}
+
+.section-tag {
+  display:inline-block;
+  background:rgba(255,106,0,0.1);
+  border:1px solid rgba(255,106,0,0.3);
+  border-radius:99px; padding:5px 18px;
+  font-size:.75rem; font-weight:700;
+  color:var(--orange); letter-spacing:2px;
+  text-transform:uppercase; margin-bottom:16px;
+}
+
+.section-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,6vw,4.5rem);
+  letter-spacing:4px; line-height:.95;
+  margin-bottom:16px;
+}
+
+.section-title span {
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+.section-desc {
+  color:var(--muted); font-size:1rem;
+  max-width:500px; line-height:1.6;
+}
+
+/* ── FEATURES ── */
+#features { max-width:1100px; margin:0 auto; }
+
+.features-header { text-align:center; margin-bottom:60px; }
+.features-header .section-desc { margin:0 auto; }
+
+.features-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+}
+
+.feature-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px; padding:28px;
+  position:relative; overflow:hidden;
+  transition:all .3s;
+}
+.feature-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--orange),var(--yellow),transparent);
+}
+.feature-card:hover {
+  transform:translateY(-6px);
+  border-color:rgba(255,106,0,0.4);
+  box-shadow:0 20px 40px rgba(255,106,0,0.1);
+}
+.feature-icon {
+  font-size:2.5rem; margin-bottom:16px; display:block;
+}
+.feature-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem; letter-spacing:3px;
+  color:var(--orange); margin-bottom:8px;
+}
+.feature-desc {
+  color:var(--muted); font-size:.9rem; line-height:1.6;
+}
+
+/* ── GAME MODES ── */
+#modes {
+  background:rgba(255,106,0,0.03);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.modes-inner { max-width:1100px; margin:0 auto; }
+
+.modes-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px; margin-top:40px;
+}
+
+.mode-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px; padding:24px;
+  display:flex; align-items:flex-start; gap:18px;
+  transition:all .3s; position:relative; overflow:hidden;
+}
+.mode-card::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg,rgba(255,106,0,0.05),transparent);
+  opacity:0; transition:opacity .3s;
+}
+.mode-card:hover::after { opacity:1; }
+.mode-card:hover { border-color:rgba(255,106,0,0.4); transform:translateX(6px); }
+
+.mode-icon-wrap {
+  width:54px; height:54px; border-radius:14px;
+  background:rgba(255,106,0,0.1);
+  border:1px solid rgba(255,106,0,0.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem; flex-shrink:0;
+}
+.mode-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.2rem; letter-spacing:3px; color:var(--orange);
+  margin-bottom:4px;
+}
+.mode-desc { color:var(--muted); font-size:.88rem; line-height:1.5; }
+.mode-tag {
+  display:inline-block; background:rgba(255,106,0,0.15);
+  border-radius:99px; padding:2px 10px;
+  font-size:.68rem; font-weight:700; color:var(--orange);
+  letter-spacing:1px; margin-top:6px;
+}
+
+/* ── PRICING ── */
+#pricing { max-width:1000px; margin:0 auto; }
+.pricing-header { text-align:center; margin-bottom:50px; }
+.pricing-header .section-desc { margin:0 auto; }
+
+.pricing-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.plan-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px; padding:28px;
+  position:relative; overflow:hidden;
+  transition:all .3s;
+}
+.plan-card:hover { transform:translateY(-6px); }
+
+.plan-card.popular {
+  border-color:var(--orange);
+  box-shadow:0 0 40px rgba(255,106,0,0.15);
+}
+
+.popular-badge {
+  position:absolute; top:0; right:0;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000; font-family:'Bebas Neue',sans-serif;
+  font-size:.75rem; letter-spacing:2px;
+  padding:6px 18px; border-radius:0 24px 0 14px;
+}
+
+.plan-tier {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem; letter-spacing:4px;
+  margin-bottom:12px;
+}
+
+.plan-price {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:3.5rem; letter-spacing:2px; line-height:1;
+  margin-bottom:4px;
+}
+
+.plan-period { font-size:.85rem; color:var(--muted); margin-bottom:24px; }
+
+.plan-divider {
+  height:1px; background:var(--border); margin:20px 0;
+}
+
+.plan-features { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+
+.plan-feature {
+  display:flex; align-items:center; gap:10px;
+  font-size:.9rem; font-weight:600;
+}
+.check { color:#00e676; font-size:1rem; }
+.cross { color:#ff2d55; font-size:1rem; }
+
+.btn-plan {
+  width:100%; padding:15px;
+  border:none; border-radius:12px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem; letter-spacing:3px;
+  cursor:none; transition:all .2s;
+}
+.btn-plan-free {
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  color:var(--muted);
+}
+.btn-plan-pro {
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000;
+  box-shadow:0 4px 20px rgba(255,106,0,0.3);
+}
+.btn-plan-pro:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(255,106,0,0.5); }
+.btn-plan-legend {
+  background:linear-gradient(135deg,#c800ff,#7000ff);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(176,0,255,0.3);
+}
+.btn-plan-legend:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(176,0,255,0.5); }
+
+/* ── CREATOR SECTION ── */
+#creator {
+  background:rgba(255,106,0,0.03);
+  border-top:1px solid var(--border);
+}
+.creator-inner {
+  max-width:800px; margin:0 auto;
+  display:grid; grid-template-columns:auto 1fr;
+  gap:40px; align-items:center;
+}
+.creator-avatar {
+  width:120px; height:120px; border-radius:50%;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  display:flex; align-items:center; justify-content:center;
+  font-size:3.5rem;
+  box-shadow:0 0 40px rgba(255,106,0,0.4);
+  flex-shrink:0;
+  animation:avatarGlow 3s ease-in-out infinite alternate;
+}
+@keyframes avatarGlow {
+  0%{box-shadow:0 0 20px rgba(255,106,0,0.3)}
+  100%{box-shadow:0 0 60px rgba(255,106,0,0.7)}
+}
+.creator-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.5rem; letter-spacing:4px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin-bottom:4px;
+}
+.creator-title { color:var(--orange); font-size:.85rem; letter-spacing:3px; font-weight:700; margin-bottom:14px; }
+.creator-bio { color:var(--muted); font-size:1rem; line-height:1.7; }
+
+/* ── FAQ ── */
+#faq { max-width:700px; margin:0 auto; }
+.faq-header { text-align:center; margin-bottom:40px; }
+
+.faq-item {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; margin-bottom:10px; overflow:hidden;
+}
+.faq-q {
+  padding:18px 22px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.1rem; letter-spacing:2px;
+  cursor:none; display:flex; justify-content:space-between; align-items:center;
+  transition:color .2s;
+}
+.faq-q:hover { color:var(--orange); }
+.faq-arrow { transition:transform .3s; color:var(--orange); }
+.faq-item.open .faq-arrow { transform:rotate(180deg); }
+.faq-a {
+  max-height:0; overflow:hidden;
+  transition:max-height .3s ease, padding .3s;
+  color:var(--muted); font-size:.92rem; line-height:1.7;
+  padding:0 22px;
+}
+.faq-item.open .faq-a { max-height:200px; padding:0 22px 18px; }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:10;
+  background:rgba(0,0,0,0.8);
+  border-top:1px solid var(--border);
+  padding:40px 5%;
+  text-align:center;
+}
+.footer-logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem; letter-spacing:4px;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin-bottom:8px;
+}
+.footer-tagline { color:var(--muted); font-size:.85rem; margin-bottom:20px; }
+.footer-links { display:flex; gap:24px; justify-content:center; margin-bottom:24px; }
+.footer-link {
+  color:var(--muted); text-decoration:none;
+  font-size:.82rem; font-weight:600; letter-spacing:1px;
+  transition:color .2s;
+}
+.footer-link:hover { color:var(--orange); }
+.footer-copy { color:rgba(138,106,74,0.5); font-size:.75rem; }
+
+/* ── PRIVACY POLICY SECTION ── */
+#privacy {
+  max-width:800px; margin:0 auto;
+  display:none;
+}
+#privacy.show { display:block; }
+.privacy-content {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:18px; padding:32px;
+}
+.privacy-content h2 {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem; letter-spacing:3px;
+  color:var(--orange); margin:24px 0 10px;
+}
+.privacy-content h2:first-child { margin-top:0; }
+.privacy-content p {
+  color:var(--muted); font-size:.92rem;
+  line-height:1.7; margin-bottom:12px;
+}
+
+/* ── FLOATING CTA ── */
+.floating-cta {
+  position:fixed; bottom:30px; right:30px; z-index:200;
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:#000; border:none; border-radius:50px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:.95rem; letter-spacing:2px;
+  padding:14px 28px; cursor:none;
+  box-shadow:0 8px 30px rgba(255,106,0,0.4);
+  transition:all .2s;
+  animation:floatCTA 3s ease-in-out infinite alternate;
+}
+@keyframes floatCTA {
+  0%{transform:translateY(0);box-shadow:0 8px 30px rgba(255,106,0,0.4)}
+  100%{transform:translateY(-6px);box-shadow:0 14px 40px rgba(255,106,0,0.6)}
+}
+.floating-cta:hover { transform:scale(1.05) translateY(-6px); }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity:0; transform:translateY(30px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+@media(max-width:768px) {
+  nav { padding:0 4%; }
+  .nav-links { display:none; }
+  .stats-inner { grid-template-columns:repeat(2,1fr); }
+  .pricing-grid { grid-template-columns:1fr; }
+  .modes-grid { grid-template-columns:1fr; }
+  .creator-inner { grid-template-columns:1fr; text-align:center; }
+  .creator-avatar { margin:0 auto; }
+  .floating-cta { bottom:20px; right:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Background -->
+<div class="bg-fixed"></div>
+<div class="hex-grid"></div>
+
+<!-- Floating CTA -->
+<a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+  <button class="floating-cta">⚡ PLAY NOW — FREE</button>
+</a>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SAIYAN IQ</div>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">FEATURES</a>
+    <a href="#modes" class="nav-link">GAME MODES</a>
+    <a href="#pricing" class="nav-link">PRICING</a>
+    <a href="#creator" class="nav-link">ABOUT</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+  </div>
+  <a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+    <button class="nav-cta">▶ PLAY FREE</button>
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🐉 THE ULTIMATE DBL QUIZ EXPERIENCE</div>
+    <h1 class="hero-title">
+      <span class="line1">SAIYAN IQ</span>
+      <span class="line2"><span class="by">BY</span> AYAAN</span>
+    </h1>
+    <p class="hero-desc">Test your Dragon Ball Legends knowledge with 108+ questions across 7 categories. Prove your power level to the world!</p>
+    <div class="hero-btns">
+      <a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+        <button class="btn-hero-primary">⚡ PLAY FOR FREE</button>
+      </a>
+      <a href="#pricing">
+        <button class="btn-hero-secondary">👑 GO LEGENDARY</button>
+      </a>
+    </div>
+    <div class="dragon-balls">
+      <div class="db"></div><div class="db"></div><div class="db"></div>
+      <div class="db"></div><div class="db"></div><div class="db"></div>
+      <div class="db"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <div class="stat-num">108+</div>
+      <div class="stat-label">Unique Questions</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Game Modes</div>
+    </div>
+    <div class="stat-item reveal">
+      <div class="stat-num">FREE</div>
+      <div class="stat-label">To Start Playing</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="features-header">
+      <div class="section-tag">⚡ FEATURES</div>
+      <h2 class="section-title">EVERYTHING A <span>TRUE DBL FAN</span> NEEDS</h2>
+      <p class="section-desc">Built by a DBL fan, for DBL fans. Every feature designed to give you the ultimate quiz experience.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <span class="feature-icon">🎯</span>
+        <div class="feature-name">108+ UNIQUE QUESTIONS</div>
+        <p class="feature-desc">Hand-crafted questions covering Characters, Story, Abilities, PvP Meta, Forms, Villains and Legends Limited. No repeats!</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🎙️</span>
+        <div class="feature-name">VOICE READOUT</div>
+        <p class="feature-desc">Questions and answer options read aloud automatically. Perfect for playing hands-free while commuting!</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🏆</span>
+        <div class="feature-name">HALL OF LEGENDS</div>
+        <p class="feature-desc">Global leaderboard showing the top warriors worldwide. Compete to claim the #1 Saiyan IQ spot!</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">📊</span>
+        <div class="feature-name">SCORE CATEGORIES</div>
+        <p class="feature-desc">Get rated after every quiz — Excellent, Good, Average or Need Work. Track your improvement over time!</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">📱</span>
+        <div class="feature-name">WORKS ON ALL DEVICES</div>
+        <p class="feature-desc">Phone, tablet, PC, Chromebook — no download needed. Install as a PWA app for instant access!</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="feature-icon">🏅</span>
+        <div class="feature-name">ACHIEVEMENTS SYSTEM</div>
+        <p class="feature-desc">Unlock badges as you play — First Battle, Perfection, Speed Demon, Veteran and more!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAME MODES -->
+<section id="modes">
+  <div class="modes-inner">
+    <div class="section-tag">🎮 GAME MODES</div>
+    <h2 class="section-title">4 WAYS TO <span>PROVE YOUR POWER</span></h2>
+    <div class="modes-grid">
+      <div class="mode-card reveal">
+        <div class="mode-icon-wrap">⚡</div>
+        <div>
+          <div class="mode-name">CLASSIC MODE</div>
+          <p class="mode-desc">10 random questions, 15 seconds each. The perfect warm-up for any DBL fan. Score points for speed!</p>
+          <span class="mode-tag">FREE</span>
+        </div>
+      </div>
+      <div class="mode-card reveal">
+        <div class="mode-icon-wrap">🔥</div>
+        <div>
+          <div class="mode-name">BLITZ MODE</div>
+          <p class="mode-desc">Only 5 seconds per question! Lightning fast reflexes required. Think you're fast enough?</p>
+          <span class="mode-tag">FREE</span>
+        </div>
+      </div>
+      <div class="mode-card reveal">
+        <div class="mode-icon-wrap">💀</div>
+        <div>
+          <div class="mode-name">SURVIVAL MODE</div>
+          <p class="mode-desc">One wrong answer and it's OVER. How far can you go? The ultimate test of DBL mastery!</p>
+          <span class="mode-tag" style="background:rgba(176,0,255,.15);color:#c044ff;">PRO & LEGEND</span>
+        </div>
+      </div>
+      <div class="mode-card reveal">
+        <div class="mode-icon-wrap">📅</div>
+        <div>
+          <div class="mode-name">DAILY CHALLENGE</div>
+          <p class="mode-desc">Same questions for every player every day. Compare your score with the global community!</p>
+          <span class="mode-tag">FREE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-header reveal">
+    <div class="section-tag">💰 PRICING</div>
+    <h2 class="section-title">CHOOSE YOUR <span>POWER LEVEL</span></h2>
+    <p class="section-desc" style="margin:0 auto;">Start free, upgrade when you're ready. No hidden fees ever.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <!-- Free -->
+    <div class="plan-card reveal">
+      <div class="plan-tier" style="color:var(--muted);">⚪ FREE PLAN</div>
+      <div class="plan-price" style="color:var(--muted);">$0</div>
+      <div class="plan-period">forever free</div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> 10 questions per day</div>
+        <div class="plan-feature"><span class="check">✓</span> Classic & Daily modes</div>
+        <div class="plan-feature"><span class="check">✓</span> Basic leaderboard</div>
+        <div class="plan-feature"><span class="check">✓</span> Voice readout</div>
+        <div class="plan-feature"><span class="cross">✗</span> Survival mode</div>
+        <div class="plan-feature"><span class="cross">✗</span> Unlimited questions</div>
+        <div class="plan-feature"><span class="cross">✗</span> Ad free</div>
+      </div>
+      <a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+        <button class="btn-plan btn-plan-free">PLAY FREE</button>
+      </a>
+    </div>
+
+    <!-- Pro -->
+    <div class="plan-card popular reveal">
+      <div class="popular-badge">⭐ MOST POPULAR</div>
+      <div class="plan-tier" style="color:var(--orange);">🔥 SUPER SAIYAN</div>
+      <div class="plan-price" style="color:var(--orange);">$2.99</div>
+      <div class="plan-period">per month</div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> Unlimited questions daily</div>
+        <div class="plan-feature"><span class="check">✓</span> All 108+ questions</div>
+        <div class="plan-feature"><span class="check">✓</span> All 4 game modes</div>
+        <div class="plan-feature"><span class="check">✓</span> No ads ever</div>
+        <div class="plan-feature"><span class="check">✓</span> Priority leaderboard</div>
+        <div class="plan-feature"><span class="cross">✗</span> Early access content</div>
+      </div>
+      <a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+        <button class="btn-plan btn-plan-pro">⚡ GO SUPER SAIYAN</button>
+      </a>
+    </div>
+
+    <!-- Legend -->
+    <div class="plan-card reveal" style="border-color:rgba(176,0,255,.3);">
+      <div class="plan-tier" style="color:#c044ff;">👑 LEGENDARY</div>
+      <div class="plan-price" style="color:#c044ff;">$4.99</div>
+      <div class="plan-period">per month</div>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        <div class="plan-feature"><span class="check">✓</span> Everything in Super Saiyan</div>
+        <div class="plan-feature"><span class="check">✓</span> Early access new questions</div>
+        <div class="plan-feature"><span class="check">✓</span> Exclusive Legendary badge</div>
+        <div class="plan-feature"><span class="check">✓</span> Part 3, 4 & 5 early access</div>
+        <div class="plan-feature"><span class="check">✓</span> Direct feedback to creator</div>
+        <div class="plan-feature"><span class="check">✓</span> Ad free forever</div>
+      </div>
+      <a href="https://cuteayaan0205.github.io/saiyan-iq" target="_blank">
+        <button class="btn-plan btn-plan-legend">👑 GO LEGENDARY</button>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CREATOR -->
+<section id="creator">
+  <div class="creator-inner">
+    <div class="creator-avatar reveal">⚡</div>
+    <div class="reveal">
+      <div class="section-tag">👤 THE CREATOR</div>
+      <div class="creator-name">AYAAN</div>
+      <div class="creator-title">DBL FAN · APP CREATOR · QUIZ MASTER</div>
+      <p class="creator-bio">
+        Hey! I'm Ayaan — a huge Dragon Ball Legends fan from Hyderabad, India.
+        I built Saiyan IQ because I wanted a proper DBL quiz that actually tests
+        real game knowledge — not just basic stuff. Every question is hand-picked
+        from my own DBL experience. I update the app every 3 months with fresh
+        questions and new features. If you love DBL, this app is for you! 🐉
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-header reveal">
+    <div class="section-tag">❓ FAQ</div>
+    <h2 class="section-title">GOT <span>QUESTIONS?</span></h2>
+  </div>
+  <div id="faqList">
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">IS THE APP REALLY FREE? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Yes! The free plan gives you 10 questions every day completely free. No credit card needed. Upgrade only when you want unlimited access.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">DO I NEED TO DOWNLOAD ANYTHING? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">No download needed! It works directly in your Chrome browser on any device. You can optionally install it as a PWA app on your home screen for instant access.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">HOW OFTEN ARE NEW QUESTIONS ADDED? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">New questions are added every 3 months in batches of 60+ questions. Legendary plan members get early access to new content before everyone else!</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">IS THIS AN OFFICIAL DBL APP? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">No — Saiyan IQ is a fan-made quiz app created independently. It is not affiliated with Bandai Namco or Toei Animation. All Dragon Ball content belongs to their respective owners.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">CAN I CANCEL MY SUBSCRIPTION ANYTIME? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Absolutely! Cancel anytime with no questions asked. You keep access until the end of your billing period. No hidden fees ever.</div>
+    </div>
+    <div class="faq-item reveal">
+      <div class="faq-q" onclick="toggleFaq(this)">WHAT DEVICES DOES IT WORK ON? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">It works on every device with a browser — Android, iPhone, iPad, Chromebook, Windows PC, Mac. Optimised for both mobile and desktop!</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY POLICY -->
+<section id="privacy">
+  <div class="privacy-content">
+    <div class="section-tag">📜 PRIVACY POLICY</div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;margin:16px 0;">PRIVACY POLICY</h1>
+    <p>Last updated: May 2026</p>
+    <h2>1. INFORMATION WE COLLECT</h2>
+    <p>Saiyan IQ collects minimal information to provide the best quiz experience. We collect your chosen username, quiz scores, and game preferences which are stored locally on your device.</p>
+    <h2>2. HOW WE USE YOUR INFORMATION</h2>
+    <p>Your information is used solely to display your scores, track achievements, and personalise your quiz experience. We do not sell or share your personal data with third parties.</p>
+    <h2>3. PAYMENTS</h2>
+    <p>Payment processing is handled securely by Stripe. We never store your payment card details on our servers. All transactions are encrypted and secure.</p>
+    <h2>4. COOKIES</h2>
+    <p>We use local storage on your device to save your game progress and preferences. No tracking cookies are used.</p>
+    <h2>5. CHILDREN'S PRIVACY</h2>
+    <p>Saiyan IQ is suitable for all ages. We do not knowingly collect personal information from children under 13 without parental consent.</p>
+    <h2>6. CONTACT</h2>
+    <p>If you have any questions about this Privacy Policy, please contact us through the app's feedback feature.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SAIYAN IQ BY AYAAN</div>
+  <p class="footer-tagline">The ultimate Dragon Ball Legends quiz experience 🐉</p>
+  <div class="footer-links">
+    <a href="#features" class="footer-link">Features</a>
+    <a href="#modes" class="footer-link">Game Modes</a>
+    <a href="#pricing" class="footer-link">Pricing</a>
+    <a href="#creator" class="footer-link">About</a>
+    <a href="#" class="footer-link" onclick="showPrivacy()">Privacy Policy</a>
+  </div>
+  <p class="footer-copy">© 2026 Saiyan IQ by Ayaan. Fan-made app. Not affiliated with Bandai Namco or Toei Animation.</p>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cursor.style.left=(mx-6)+'px'; cursor.style.top=(my-6)+'px'; });
+setInterval(() => { rx+=(mx-rx)*0.15; ry+=(my-ry)*0.15; ring.style.left=(rx-18)+'px'; ring.style.top=(ry-18)+'px'; }, 16);
+document.querySelectorAll('button,a,.faq-q').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform='scale(2)'; ring.style.transform='scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform='scale(1)'; ring.style.transform='scale(1)'; });
+});
+
+// ── FIRE PARTICLES ──
+const bgEl = document.querySelector('.bg-fixed');
+for(let i=0;i<20;i++){
+  const p=document.createElement('div');
+  p.className='fire-particle';
+  const sz=4+Math.random()*8;
+  const colors=['rgba(255,106,0,','rgba(255,60,0,','rgba(255,160,0,'];
+  const c=colors[Math.floor(Math.random()*colors.length)];
+  p.style.cssText=`width:${sz}px;height:${sz*1.5}px;background:${c}0.6);left:${Math.random()*100}%;bottom:0;animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*5}s;filter:blur(${Math.random()*2}px)`;
+  bgEl.appendChild(p);
+}
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'), i*80);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.1});
+reveals.forEach(r=>obs.observe(r));
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// ── PRIVACY ──
+function showPrivacy() {
+  const p = document.getElementById('privacy');
+  p.classList.add('show');
+  p.scrollIntoView({behavior:'smooth'});
+}
+
+// ── SMOOTH NAV ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+
+// ── COUNTER ANIMATION ──
+function animateCounter(el, target, suffix='') {
+  let current=0;
+  const step = target/60;
+  const timer = setInterval(()=>{
+    current+=step;
+    if(current>=target){ current=target; clearInterval(timer); }
+    el.textContent = Number.isInteger(target) ? Math.floor(current)+suffix : current.toFixed(0)+suffix;
+  },16);
+}
+const statObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const nums = e.target.querySelectorAll('.stat-num');
+      nums.forEach(n=>{
+        const txt=n.textContent;
+        if(txt==='108+') animateCounter(n,108,'+');
+        else if(txt==='7') animateCounter(n,7);
+        else if(txt==='4') animateCounter(n,4);
+      });
+      statObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+const statsBar = document.querySelector('.stats-bar');
+if(statsBar) statObs.observe(statsBar);
+</script>
+</body>
+</html>
